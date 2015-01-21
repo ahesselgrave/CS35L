@@ -1,0 +1,32 @@
+--- exer1.html	2014-04-04 11:10:05.006458086 -0700
++++ exer3.html	2014-04-04 11:28:43.238445518 -0700
+@@ -3,17 +3,17 @@
+ 	"http://www.w3.org/TR/html4/strict.dtd">
+ <html>
+ <head>
+-<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'>
+-<title>Assignment 1. Getting to know your system</title>
++<meta http-equiv='Content-Type' content='text/html;charset=US-ASCII'>
++<title>Assignment 35. Getting to know your system</title>
+ </head>
+ 
+ <body>
+ 
+-<h1>Assignment 1. Getting to know your system</h1>
++<h1>Assignment 35. Getting to know your system</h1>
+ 
+ <h2>Laboratory: Linux and Emacs scavenger hunt</h2>
+ 
+-<!-- diff，在UNIX系統上的一個工具程式，它可以比較兩個檔案之間的不同。通常它被用來比較同一個檔案，在不同版本間的差異。它可以產生一個擴展名為.diff或.patch的檔案，這個檔案可以被另一個工具程式patch來使用。-->
++
+ 
+ <p>Instructions: Use the commands that you learned in class to find
+ answers to these questions. Don't use a search engine like Google, and
+@@ -26,6 +26,7 @@
+ assignment.
+ 
+ <ol>
++
+ <li>
+ How can you get <samp>man</samp> to print all the commands that have a specific
+ word in their man page (or at least the description part of the

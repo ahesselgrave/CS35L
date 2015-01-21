@@ -1,0 +1,31 @@
+1) man man
+2) man whereis
+3) find / -executable -name ?
+   man w 
+   man X
+4) cc
+   man readlink
+   readlink /usr/bin/cc
+5) man chmod
+6) man find
+7) man find
+8) cd /usr/bin
+   find /usr/bin/ -type l | wc
+9) cd /usr/bin/
+   ls -lt
+10)man locale
+11)M-x sort
+   Enter Enter
+12)C-h k
+   C-[a-z]
+13)C-h k
+   C-g
+14)C-h k
+   C-y
+15)M-x
+   dired
+   /usr/bin
+   M-x
+   shell
+   cd /usr/bin
+   ls -l

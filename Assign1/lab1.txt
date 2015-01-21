@@ -1,0 +1,58 @@
+//Problems done on Kubuntu 13.10
+
+1) man -k
+2) cp is located in /bin/cp
+   wc is located in /usr/bin/wc
+3) w: show who is logged on and what they are doing
+   X: a portable, network-transparent window system
+4) The symbolic link points to gcc
+5) g-s removes group permission to set user or group ID on execution
+6) -mtime
+7) find / -type d -mtime 3
+8) 309     309    5587
+   The first number is the number of newlines, so therefore it outputted
+   309 matches in /usr/bin
+9) c89-gcc
+10)locale gets its information from the current locale environment
+11)sort-columns
+   sort-fields
+   sort-lines
+   sort-numeric-fields
+   sort-pages
+   sort-paragraphs
+   sort-regexp-fields
+12)C-a goes to the beginning of the line
+   C-b moves the cursor back one character
+   C-c does nothing by itself ****
+   C-d deletes the character the cursor is on
+   C-e goes to the last column in the line
+   C-f moves the cursor forward one character
+   C-g quits commands
+   C-h starts the help buffer
+   C-i indents
+   C-j newlines and indents
+   C-k deletes everything on and to the right of the cursor in the line
+   C-l runs the command recenter-top-bottom
+   C-m newlines and moves the cursor to the first column of that new line
+   C-n moves the cursor down one row
+   C-o newlines without moving the cursor
+   C-p moves the cursor up one row
+   C-q makes the next C-? output its character 
+   C-r does I-search backwards
+   C-s does I-search forwards
+   C-t swaps the previous character with character the cursor is on
+   C-u writes the next character pressed 4 times
+   C-v goes to the end of the buffer
+   C-w deletes a region of text
+   C-x prefaces other emacs commands
+   C-y does the yank command 
+   C-z runs the command suspend-frame 
+13)C-g runs the command keyboard-quit, which is an interactive compiled Lisp 
+   program. It will quit any 
+14)yank pastes the last stretch of most recently killed text
+15)ls -l has color highlighting, dired does not
+
+
+
+
+

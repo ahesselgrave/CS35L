@@ -1,0 +1,13 @@
+I checked out v3.0 again with "git checkout v3.0 -b quote". I applied the patch
+with "patch -p1 <quote-3.0-patch.txt" and it patched the 6 .c files it should
+have. I opened emacs and used C-x 4 a to open the changelog and entered "hw4
+revision". I added the modified .c files with git add src/*.c and commited them
+with git commit -m "hw4 revision". I then made the new patch with "git
+format-patch -1 --stdout >formatted-patch.txt" and let my partner, Brendan Sio,
+test it. He applied the patch with "git am <formatted-patch.txt", used
+./configure and make, and said it  built properly with no fuss. ./diff . - and 
+./diff --help did what they should have, and make check didn't get upset.
+
+I ran make distdir and checked my ChangeLog file, and lo and behold it had my
+"hw4 revision" message in it. 
+

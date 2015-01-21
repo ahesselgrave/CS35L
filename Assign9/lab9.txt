@@ -1,0 +1,18 @@
+
+
+I used time to compare catu and catb on a large 9,000,000 tar file. Here is the
+time results: 
+
+ahesselgrave@Illustrated-Handbook:~/projects/CS35L/Assign9$ time ./catb
+<~/df_34_11_linux.tar.bz2 >catbtest
+
+real   0m0.256s
+user   0m0.222s
+sys    0m0.016s
+ahesselgrave@Illustrated-Handbook:~/projects/CS35L/Assign9$ time ./catu
+<~/df_34_11_linux.tar.bz2 >catutest
+
+real   0m15.594s
+user   0m0.436s
+sys    0m14.729s
+

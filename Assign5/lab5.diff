@@ -1,0 +1,15 @@
+Changes: used boolean expressions to prevent integer underflow/overflow
+--- timespec.h	2005-09-21 23:05:39.000000000 -0700
++++ timespec.h  2014-05-03 17:10:08.293797024 -0700
+@@ -45,7 +45,10 @@
+ static inline int
+ timespec_cmp (struct timespec a, struct timespec b)
+ {
+-  int diff = a.tv_sec - b.tv_sec;
++  int diff;
++  if (a.tv_sec < b.tv_sec)       diff = -1;
++  else if (a.tv_sec > b.tv_sec)  diff = 1;
++  else if (a.tv_sec == b.tv_sec) diff = 0;
+   return diff ? diff : a.tv_nsec - b.tv_nsec;
+ }
+ 

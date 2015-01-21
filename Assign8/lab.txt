@@ -1,0 +1,38 @@
+To start, I used wget to get the tar file and untarred sthttpd. I copied the
+patch into a .diff file and used patch -p0 to patch thttpd.c. Then I used
+./configure CFLAGS="-g" and make to build. I ran the server with ./thttpd -p
+12300 and used ps aux | grep thttpd to find the pid. I ran gdb and attached my
+server to it. On a separate shell I made a simple C program that wrote 6000 A's
+to stdout and appended that into a small shell script that already contained
+"wget http://localhost:12300/". I ran the shell script and continued in gdb,
+which led to a segfault. I used bt which showed a heap overflow from failed
+mallocs and reallocs. I could create a remote exploit that would attempt to wget
+with large heap overflows on all ports within a certain range to crash all of
+them. If I figured out the stack structure I could rewrite the return address to
+a block of arbitrary code I injected into the request that would open a shell
+with root access. 
+
+To test -fstack-protector, I went into the src/ directory and ran gcc -m32 -c -S
+-o thttpd-nostackprot.s -fno-stack-proctector -I . -I ../ thttpd.c and gcc -m32 -c -S
+-o thttpd-stackprot.s -fstack-protector -I . -I ../ thttpd.c to generate the
+assembly language code. I used diff thttpd-nostackprot.s thttpd-stackprot.s |
+grep call to see which had more functions called. stackprot had 4 more function
+calls to __stack_chk_fail, so it would be less efficient than nostackprot.
+However those extra stack checks would not prevent my exploit because my exploit
+is a heap overflow. 
+
+To test AddressSanitizer, I used make clean and then make CC="gcc -m32" \
+  CFLAGS="-fsanitize=address -fstack-protector" \
+  LDFLAGS="-Xlinker --rpath=/usr/local/cs/gcc-$(gcc -dumpversion)/lib"
+to rebuild. I attached it to gdb and ran the crashing script and continued. It
+said "[Inferior 1 (process 32717) exited with code 01]" and bt said no stack, so
+the program terminates instead of crashing. 
+
+I used GCC's -S option again to make thttpd-sanitize.s and used diff
+thttpd-sanitize.s thttpd-stackprot.s | grep call to compare efficiency. It is
+clear that stackprot is much more efficient because sanitize makes a large
+number of function calls to various __asan* functions. 
+
+I tried running the program under valgrind using valgrind --leak-check=yes
+./thttpd -p 12300 and ran the crashing program. Valgrind didn't help; the
+server still crashed. 

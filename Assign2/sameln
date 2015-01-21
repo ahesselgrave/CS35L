@@ -1,0 +1,26 @@
+#!/bin/bash
+#./sameln "directory"
+# $0         $1
+DIR=`ls -A $1` #sorts ls output lexicographically
+for FILE1 in $DIR
+do
+	if [ -f "$1/$FILE1" ] #if it is a regular file, check for hard links
+	then
+	for FILE2 in $DIR
+		do
+			if [ -f "$FILE2" ]
+			then
+				cmp -s "$FILE1" "$FILE2"
+				p=$?
+				if [ $p -eq 0 ] && [ "$FILE1" != "$FILE2" ]
+				then
+					rm "$FILE2"
+					ln "$FILE1" "$FILE2" 
+				elif [ $p -gt 1 ] #error!
+				then
+					echo "Error comparing $FILE1 and $FILE2" 
+				fi
+			fi
+		done
+	fi
+done

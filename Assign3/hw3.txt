@@ -1,0 +1,11 @@
+Q1) Brady's patch removed case_long_iso_time_style: because he removed a goto
+call to it in the patch. Deleting it was not absolutely necessary since it
+was just a label to a certain point in the program
+
+Q2) For other languages, if coreutils-7.6 cannot find the right locale, it will
+default to the long-iso date format which we tried to patch away.
+
+Q3) Since /dev/null is an empty file, an IndexError was thrown since the
+sequence is empty
+
+Q4) There is an error in IOError because Python3 has different exception syntax

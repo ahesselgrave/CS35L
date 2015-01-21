@@ -1,0 +1,10 @@
+To start, I downloaded the OpenSSH client and server using sudo apt-get install
+openssh-client and sudo apt-get install openssh-server. I then used ssh-keygen
+and entered a passphrase to create a public and private key for my user. On my
+partner's machine, I created a user using sudo useradd -d /home/alex -m alex and
+set a password using sudo passwd alex. Once my home directory was made, I went
+inside and used mkdir .ssh to hold my public key. Finally I used ifconfig to see
+the IP address of my partner's machine. Once I had that information, I went back
+to my laptop and used ssh-copy-id alex@<ip addr> to send my public key to my
+partner's machine. Once that sent, I used ssh -X alex@<ip addr> and it logged in
+with no password, and I was able to use GUI programs.

@@ -1,0 +1,6 @@
+First, I created a random file of floats using od -An -f -N 10000000 <
+/dev/urandom | tr -s ' ' '\n' > random.txt To time the sort, I used time -p 
+sort -g --parallel=N <random.txt >/dev/null, where N is the number of cores
+utilized. For the lab I used N values of 1, 2, 4, and 8. For 1 core, I got a
+realtime sort of 21.91 seconds. 2 cores gave 11.78 seconds, 4 cores gave 6.68
+seconds, and 8 cores gave 4.44 seconds. 

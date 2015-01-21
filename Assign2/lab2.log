@@ -1,0 +1,62 @@
+tr -c 'A-Za-z' '[\n*]' gets every English word in the HTML file and replaces 
+everything else with a newline
+
+tr -cs 'A-Za-z' '[\n*]' gets every English word in the HTML file and replaces 
+everything else with a newline, but squeezes it so there is at most 1 newline 
+between lines
+
+tr -cs 'A-Za-z' '[\n*]' | sort sorts every English word in the HTML file,
+including duplicates
+
+tr -cs 'A-Za-z' '[\n*]' | sort -u does the same as above, but does not display 
+duplicate matches
+
+tr -cs 'A-Za-z' '[\n*]' | sort -u | comm - words displays lines unique
+to assign2.html, lines unique to words, and lines that appear in both
+
+tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - words displays words that are 
+unique only to assign2.html 
+
+To start off,I got the html file with wget and passed it into this shell script
+
+#!/bin/bash
+tr -d '\r' <hwnwdseng.htm | sed '/<!DOCTYPE/,/Adopt<\/td>/d' | \
+sed '/<\/tr>/,/<\/td>/d' - | sed 's/[/td]//g' -| sed 's/<u>//g' -|\
+sed 's/[<>]//g' -| sed "s/\`/'/g" - | sed 's/[,]/\n   /g' -| \
+sed 's/ //g' -| tr '[:upper:]' '[:lower:]' | sed "s/[^pk'mnwlhaeiou]//g" |\
+sort -u 
+
+I start off by deleting carriage returns and the whole first part of the HTML
+file up to the </td> tag after the first English word. I then delete every
+other English word and the last section after the table is over, leaving me
+with only Hawaiian words, td tags, and underline tags. I then use a sequence
+of sed commands to get rid of all the remaining HTML tags. Afterwards, I use
+sed to replace commas with newlines to separate words, and then I delete all
+spaces to make it flush. I then turn all upper case letters into lower case
+letters using tr, and then use sed to delete anything else that isn't a 
+Hawaiian letter. Now I have an unsorted list of Hawaiian words, so I pipe all
+that into sort.
+
+tr -cs 'A-Za-z' '[\n*]' <assign2.html | tr '[:upper:]' '[:lower:]' | sort -u |\
+comm -23 - hwords is my implementation for a Hawaiian spellchecker. It isolates
+all the words in assign2.html, changes everything to lower case, sorts it, and 
+then compares it to hwords, only displaying words in assign2.html that do not 
+appear in hwords (i.e. the mispelled words).
+
+halau and kula are mispelled in English but not in Hawaiian. I used 
+tr -cs 'A-Za-z' '[\n*]' <assign2.html | tr '[:upper:]' '[:lower:]' | sort -u |\
+comm -23 - words | comm -12 - hwords to test. I found all mispelled English 
+words and compared them against the Hawaiian spellcheck.
+
+Reversing this, by using 
+tr -cs 'A-Za-z' '[\n*]' <assign2.html | tr '[:upper:]' '[:lower:]' | sort -u |\
+comm -23 - hwords | comm -12 - words | wc -l
+I found that there were 339 mispelled Hawaiian words that were correctly 
+spelled English words
+
+
+
+
+
+
+

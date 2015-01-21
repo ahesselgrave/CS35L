@@ -1,0 +1,48 @@
+malloc does not call constructor, returns a void*
+if out of heap space, malloc returns NULL
+//Rectangle_t* ptr = (Rectangle_t*) malloc(sizeof(Rectangle_t));
+//if (ptr == NULL) printf("shit happened")
+//else ...; free(ptr); ptr = NULL;
+free does not call destructor
+malloc can make arrays //Rectangle_t* ptr3 = malloc(sizeof(Rectangle_t)*3)
+//ptr3 = (Rectangle_t*) realloc(ptr3, 4); 
+FILE* file pointers.
+FILE* fptr = fopen("filename.txt", /*"r" for read, "w" for write, "a" for
+append*/);
+if(fPtr != NULL) //still do NULL checks
+{
+//do stuff
+fclose(fptr);
+}
+else printf("Error reading file");
+stdin, stdout, and stderr are FILE* type.
+getc(FILE* fp); //reads one character, so for user input use getc(stdin);
+putc(int c, FILE* pf) //writes characters
+char* fgets(char* buf, int n, FILE* fp)
+int fputs(/*parameters*/)
+
+printf defaults to stdout
+scanf defaults from stdin
+int num;
+fscanf("%d", &num); 
+
+int fprintf(FILE* restrict fp, const char* restrict format, ...);
+int fscanf( FILE* restrict fp, const char* restrict format, ...); 
+... variable arg count
+%d decimal, %s c-string, %f floating point
+
+gcc: -g flag has a lot more debug information
+gdb -i=mi <object file>
+
+gdb shell:
+b <function> //sets a breakpoint at function start
+b [filename]:[linenumber] //breakpoint at line number
+info b //get breakpoint info
+d # //delete breakpoint #
+r //run program
+n //step over
+s //step into, goes into function line by line
+p <variable name> //prints variable value
+bt //backtrace and check the stack
+c //continue till next breakpoint
+q //quit

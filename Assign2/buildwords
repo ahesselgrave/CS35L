@@ -1,0 +1,6 @@
+#!/bin/bash
+tr -d '\r' | sed '/<!DOCTYPE/,/Adopt<\/td>/d' | \
+sed '/<\/tr>/,/<\/td>/d' - | sed 's/[/td]//g' -| sed 's/<u>//g' -|\
+sed 's/[<>]//g' -| sed "s/\`/'/g" - | sed 's/[,]/\n   /g' -| \
+sed 's/ //g' -| tr '[:upper:]' '[:lower:]' | sed "s/[^pk'mnwlhaeiou]//g" |\
+sort -u 

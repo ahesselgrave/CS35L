@@ -1,0 +1,26 @@
+First I used "git clone git://git.savannah.gnu.org/diffutils.git" to get the
+diffutils repository. After that I used ./bootstrap, ./configure, and make in
+that order. Then I went into the clone directory and used "git log >git-log.txt
+" and "git tag >git-tags.txt" to make the log and tags text files. To find the
+right commit, I used vim git-log.txt and "/maint: quote" to find the proper
+commit and copied its commit hash. I then used "git show <commit hash>
+>quote-patch.txt" to generate the patch file. I checked out v3.0 with "git
+checkout v3.0" and applied the patch with "patch -p1 <quote-patch.txt".
+diffutils.texi, HACKING, and help2man could not be patched. "git status"
+returned a large list of modified and untracked files.
+
+I then used Emacs to revert the changes in the non .c files. I used the vc-diff
+buffer and diff-apply-hunk to change the files back. For the .c files, I opened
+them and changed them by hand to make sure the character strings were the only
+things changed in the modified .c files. I then looked at the .rej files for
+diff and diff3 and manually applied those patches. I used git clean -f to get
+rid of all the untracked files, and I redirected git diff into
+quote-3.0-patch.txt.
+
+I copied over the diffutils patched version into diffutils-3.0-patch and
+checked out another copy of diffutils in a new branch and directory with "git
+checkout v3.0 -b tmpbranch". I used my version of diff to compare them and
+redirect the output into quote-3.0-test.txt, and it matched perfectly with my
+quote-3.0-patch.txt file.
+
+

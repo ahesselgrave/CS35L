@@ -1,0 +1,20 @@
+To start, I used wget to get the coreutils tar file and used tar -xzf to 
+extract its contents into my project directory. Once that finished, I 
+used cd to go inside the tar output directory. Inside the coreutils dir,
+I used mkdir to create an output directory for configure. Then I used
+pwd to get my absolute path and put that into "./configure --prefix=\
+<absolute path>". When that finished, I used "make -j 8" followed by
+"make install" to compile all the files. 
+
+Once that was all done, I used cd to get to the mkdir bin directory and tested
+the version 7.6 ls and saw the timestamp display problem. Then I used wget to
+download the http file with Brady's patch. I opened it with vim and searched 
+for the diff output to see what to change. I removed all the lines prefixed
+by a - and added in the 2 + lines and saved the file. I then used cd to go
+back to the Makefile directory and used "make" to build the fixed version.
+
+To test, I used touch to change the timestamps of various files in the
+respective ls directories and ensured the output did as it should. Regardless
+of the timestamp, the installed ls had the wrong output, and the recompiled 
+version displayed properly.
+

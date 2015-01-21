@@ -1,0 +1,31 @@
+I tried to get access to an instance of EC2 by creating an account. Even though
+it's supposed to be a free service it got mad at my card information saying it
+was unable to confirm because it was unable to do a $1.00 authorization and my
+overdraft protection denied that charge, so there goes that. 
+
+Moving on, here are my rankings for the web vulnerabilities. 
+
+1) Heartbleed. Heartbleed allows hackers to send heartbeat SSL packets to a
+server and retrieve up to 64kB of server information per heartbeat. With a
+simple script a person with malicious intent could retrieve passwords, SSNs,
+private keys, and other important encrypted data about the server. 
+
+2) Remote integer overflow. Since this bug could allow an attacker to execute
+arbitrary code as the SSH daemon (typically root), the attacker could easily
+take all important information and DDos or corrupt the server.
+
+3) Office memory corruption. Using the converter a hacker can execute arbitrary
+code such as spawning a shell on the server and causing mayhem or stealing data.
+This is lower than the integer overflow since the priviledges are of the user
+and not necessarily root.
+
+4) Struts2 ClassLoader. An attacker can modify the private variables of a class
+and steal their contents or load a malicious class that would steal and relay
+sensitive information back to the attacker. 
+
+5) ScreenOS SSL DDos. An attacker can do an extended denial of service attack
+using malformed SSL packets. This is lower than all the others because although
+the server would be down, the server information is still intact and safe from
+attackers.
+ 
+

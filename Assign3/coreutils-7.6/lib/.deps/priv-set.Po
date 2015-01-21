@@ -1,0 +1,10 @@
+priv-set.o: priv-set.c /usr/include/stdc-predef.h \
+ /usr/include/x86_64-linux-gnu/bits/predefs.h config.h priv-set.h
+
+/usr/include/stdc-predef.h:
+
+/usr/include/x86_64-linux-gnu/bits/predefs.h:
+
+config.h:
+
+priv-set.h:

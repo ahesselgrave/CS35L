@@ -1,0 +1,190 @@
+--- /home/ahesselgrave/srt/main.c	2010-11-11 15:21:28.000000000 -0800
++++ main.c	2014-05-19 22:53:28.082012941 -0700
+@@ -21,6 +21,7 @@
+ #include "raymath.h"
+ #include "shaders.h"
+ 
++#include <pthread.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <assert.h>
+@@ -31,6 +32,13 @@
+ { {1,0,0}, {-1,0,0}, {0,1,0}, {0,-1,0}, {0,0,1}, {0,0,-1} };
+ static const int opposites[] = { 1, 0, 3, 2, 5, 4 };
+ 
++/* Create pixel struct */
++typedef struct Pixel{
++    float R, G, B;
++} Pixel;
++
++/* Create global grid variable for functions to use */
++Pixel** grid;
+ 
+ static void
+ add_sphereflake( scene_t* scene, int sphere_id, int parent_id, int dir,
+@@ -151,32 +159,17 @@
+ /* z value for ray */
+ enum { z = 1 };
+ 
+-int
+-main( int argc, char **argv )
+-{
+-    int nthreads = argc == 2 ? atoi( argv[1] ) : 0;
+-
+-    if( nthreads < 1 )
+-    {
+-      fprintf( stderr, "%s: usage: %s NTHREADS\n", argv[0], argv[0] );
+-      return 1;
+-    }
+-
+-    if( nthreads != 1 )
+-    {
+-      fprintf( stderr, "%s: Multithreading is not supported yet.\n", argv[0] );
+-      return 1;
+-    }
+-
+-    scene_t scene = create_sphereflake_scene( sphereflake_recursion );
++typedef struct RayInfo{
++    scene_t* sptr;
++    int partitionSize;
++    int partitionNum;
++} RayInfo;
+ 
+-    /* Write the image format header */
+-    /* P3 is an ASCII-formatted, color, PPM file */
+-    printf( "P3\n%d %d\n%d\n", width, height, max_color );
+-    printf( "# Rendering scene with %d spheres and %d lights\n",
+-            scene.sphere_count,
+-            scene.light_count );
++void* ThreadFunction(void* t)
++{
++    RayInfo* info = (RayInfo*) t;
+ 
++    scene_t scene = *(info->sptr);
+     Vec3 camera_pos;
+     set( camera_pos, 0., 0., -4. );
+     Vec3 camera_dir;
+@@ -195,7 +188,9 @@
+                       : pixel_dy;
+ 
+     /* for every pixel */
+-    for( int px=0; px<width; ++px )
++    int px_start = info->partitionNum * info->partitionSize; 
++    int px_end = (info->partitionNum + 1) * info->partitionSize;
++    for( int px=px_start; px<px_end; ++px)
+     {
+         const double x = pixel_dx * ((double)( px-(width/2) ));
+         for( int py=0; py<height; ++py )
+@@ -250,21 +245,104 @@
+             for( int i=0; i<3; i++)
+                 scaled_color[i] = max( min(scaled_color[i], 255), 0);
+ 
+-            /* write this pixel out to disk. ppm is forgiving about whitespace,
+-             * but has a maximum of 70 chars/line, so use one line per pixel
+-             */
+-            printf( "%.0f %.0f %.0f\n",
+-		    scaled_color[0], scaled_color[1], scaled_color[2] );
++            grid[px][py].R = scaled_color[0];
++            grid[px][py].G = scaled_color[1];
++            grid[px][py].B = scaled_color[2];
+         }
+-        printf( "\n" );
+     }
++    pthread_exit(0);
++}
++
++
++
++void check(void* p)
++{
++    if (p == NULL)
++    {
++        fprintf(stderr, "Error allocating memory\n");
++        exit(-1);
++    }
++}
++
++int
++main( int argc, char **argv )
++{
++    int nthreads = argc == 2 ? atoi( argv[1] ) : 0;
++
++    if( nthreads < 1 )
++    {
++      fprintf( stderr, "%s: usage: %s NTHREADS\n", argv[0], argv[0] );
++      return 1;
++    }
++    /* Initialize grid of pixels */
++    grid = (Pixel**) malloc(sizeof(Pixel*)*height); check(grid);
++    for (int i = 0; i < height; i++)
++    {
++        grid[i] = (Pixel*) malloc (sizeof(Pixel)*width);
++        check(grid[i]);
++    }
++
++    /* Create array of threads */
++    pthread_t* threadID = (pthread_t*) 
++                           malloc (sizeof(pthread_t) * nthreads);
++                           
++    scene_t scene = create_sphereflake_scene( sphereflake_recursion );
++
++    /*Create info for thread function arg*/ 
++    RayInfo* info = (RayInfo*) malloc(sizeof(RayInfo));
++    info->sptr = &scene;
++    info->partitionSize = width / nthreads;
++
++    /* Write the image format header */
++    /* P3 is an ASCII-formatted, color, PPM file */
++    printf( "P3\n%d %d\n%d\n", width, height, max_color );
++    printf( "# Rendering scene with %d spheres and %d lights\n",
++            scene.sphere_count,
++            scene.light_count );
+ 
++    /* Create threads */
++    for (int i = 0; i < nthreads; i++)
++    {
++        info->partitionNum = i;
++        int rs = pthread_create(&threadID[i], 0, 
++                                ThreadFunction, 
++                                (void*) info);
++        if (rs)
++        {
++            fprintf(stderr, "Error creating thread\n");
++            return -1;
++        }
++    }
++    /* Join threads*/
++    for (int i = 0; i < nthreads; i++)
++    {
++        void* retVal;
++        int rs = pthread_join(threadID[i], &retVal);
++        if(rs)
++        {
++            fprintf(stderr, "Error joining thread\n");
++            return -1;
++        }
++    }
++    /* Output into ppm */
++    for (int i = 0; i < height; i++)
++    {
++        for (int j = 0; j < width; j++)
++        {
++            printf("%.0f %.0f %.0f\n",
++                   grid[i][j].R,grid[i][j].G,grid[i][j].B);
++        }
++        printf("\n");
++    }
++    /* Begin freeing memory */
++    free(threadID);
++    free(info);
+     free_scene( &scene );
+ 
+     if( ferror( stdout ) || fclose( stdout ) != 0 )
+     {
+-        fprintf( stderr, "Output error\n" );
+-	return 1;
++       fprintf( stderr, "Output error\n" );
++	   return 1;
+     }
+ 
+     return 0;

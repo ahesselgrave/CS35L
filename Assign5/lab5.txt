@@ -1,0 +1,25 @@
+I used wget to the coreutils tar file and the patch file. I extracted the tar
+file and used cd to go into the output directory. I ran ./configure CFLAGS="-g"
+and tried to make it, and it would have a recursive error and fail to build. I
+applied the patch with the given diff file using patch -p0 <coreutils.diff
+and used make to compile it with no issues.
+
+I created a temporary directory in /tmp and touched 3 files with the same
+timestamps and commands as Professor Eggert and got the exact same output as
+him. 
+ 
+Since the problem is in the sorting, I opened ls.c in emacs and used M-x gdb to
+start debugging. I put a breakpoint at sort_files with b sort_files. I ran the
+debugger with r -lt /tmp/now /tmp/now1 /tmp/wwi-armistice and saw it stop at
+sort_files. I used n to go down and used p sort_type to see it was
+compare_mtime. When it got to qsort, I used p compare to see which function the
+pointer referred to and saw it was cmp_mtime. I put a breakpoint on that
+function and restarted. When it got there I used s to enter it and went to
+timespec.h. The implementation used subtraction between the timestamp time and
+put it into diff, but this was causing an overflow. I changed it to just use
+boolean comparisons instead of subtraction to avoid overflow. I then made a
+patch with it using diff -u.
+
+32 bit timestamps in the SEAS NFS, but the SEASNET servers create 64 bit
+timestamps, so the upper 32 bits are truncated off the 64 bit time stamp. ls
+only gives us the lower 32 bits.

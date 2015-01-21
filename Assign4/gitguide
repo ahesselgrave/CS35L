@@ -1,0 +1,15 @@
+Start with git init, gives you a ./.git/ directiory
+Check commits with git status
+Add/cache files with git add <file>
+Commit added/cached files with git commit -m '-m is a message option'
+Look at the software history: git log
+^Outputs "commit <giant hex id, commit hash>", author, timestamp, and messages
+Using the commit hash, use git checkout <commit hash> -b <new branch name>
+Use git branch to see which branches exist (* on current branch)
+Compare using git diff HEAD HEAD^
+^ means parent. HEAD = head of current branch
+./bootstrap
+./configure
+make
+git show <commit hash> >quote-patch.txt to show all changes and put into patch file
+patch -p1 < quote-patch.txt
